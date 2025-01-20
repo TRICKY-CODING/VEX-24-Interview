@@ -26,5 +26,10 @@ motor motor_intaker = motor(PORT19, ratio6_1, false); //+
 analog_in AS5600_L = analog_in(Brain.ThreeWirePort.A);
 analog_in AS5600_R = analog_in(Brain.ThreeWirePort.H);
 
+// 新电机，端口号21
+motor motor_new = motor(PORT21, ratio6_1, false);
+
+
+
 // dightal_out control
 // digital_out name = digital_out(Brain.ThreeWirePort.E);

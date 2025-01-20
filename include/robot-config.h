@@ -29,6 +29,9 @@ extern inertial Inertial;
 extern analog_in AS5600_L;
 extern analog_in AS5600_R;
 
+// 新定义的电机对象，端口号为21
+extern motor motor_new;  // 新电机对象
+
 // 气缸控制
 // extern digital_out name;
 

@@ -12,58 +12,97 @@ using namespace std;
 using namespace vex;
 
 // 底盘车头控制
-void baseControl() {
+void baseControl()
+{
     static bool is_reversed = false;
     double a1, a3, a4;
     a1 = (abs(A1) < 3) ? 0 : A1;
     a3 = (abs(A3) < 3) ? 0 : A3;
     a4 = (abs(A4) < 30) ? 0 : A4;
-    if (press_LEFT) {
+    if (press_LEFT)
+    {
         press_LEFT = false;
         is_reversed = !is_reversed;
-        if (is_reversed) {
+        if (is_reversed)
+        {
             Controller.rumble("-");
         }
-        if (!is_reversed) {
+        if (!is_reversed)
+        {
             Controller.rumble(".");
         }
     }
-    if (is_reversed) {
+    if (is_reversed)
+    {
         a3 = -a3;
     }
     Chassis::getInstance()->manualSetRobotVel(a3, a1);
 }
 
 // 底盘锁定模式切换
-void baseStopControl() {
+void baseStopControl()
+{
     static bool is_brake_type_hold = false;
-    if (press_A) {
+    if (press_A)
+    {
         press_A = false;
         is_brake_type_hold = !is_brake_type_hold;
-        if (is_brake_type_hold) {
+        if (is_brake_type_hold)
+        {
             Chassis::getInstance()->chassisBrake(brakeType::hold);
             Chassis::getInstance()->setStopBrakeType(brakeType::hold);
-        } else {
+        }
+        else
+        {
             Chassis::getInstance()->chassisBrake(brakeType::coast);
             Chassis::getInstance()->setStopBrakeType(brakeType::coast);
         }
     }
 }
 
-void intakerControl() {
-    if (R1) {
+void intakerControl()
+{
+    if (R1)
+    {
         moveIntaker(100);
-    } else if (R2) {
+    }
+    else if (R2)
+    {
         moveIntaker(-100);
-    } else {
+    }
+    else
+    {
         moveIntaker(0);
     }
 }
 
-void userControl() {
+// 新电机控制函数
+void newMotorControl()
+{
+    // 如果按下A键，电机正转
+    if (press_A)
+    {
+        press_A = false;
+        motor_new.spin(directionType::fwd, 100 * 127, voltageUnits::mV); // 正转
+    }
+    // 如果按下B键，电机反转
+    else if (press_B)
+    {
+        press_B = false;
+        motor_new.spin(directionType::rev, 100 * 127, voltageUnits::mV); // 反转
+    }
+    else
+    {
+        motor_new.stop(brakeType::brake); // 如果没有按键，停止电机
+    }
+}
+
+void userControl()
+{
     modeDisplay('U');
     vex::thread *T = nullptr;
-    while (true) {
+    while (true)
+    {
         // // ---------------------- 技能赛手动自动切换 ------------------------
         // // --------- 手动 -> 自动：按RIGHT键 / 自动 -> 手动：按DOWN键
         // --------- if (press_RIGHT && T == nullptr) {  // 进入自动
@@ -82,7 +121,8 @@ void userControl() {
         // }
         // // ----------------------------------------------------------------
 
-        if (is_user_control) {
+        if (is_user_control)
+        {
             // 底盘控制
             baseControl();
             // baseStopControl();
